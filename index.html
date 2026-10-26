@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planeta en 365 Colores</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><div class="nav">
+<div class="brand"><div class="logo">🌎</div><span>Planeta en 365 Colores</span></div>
+<button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-controls="primaryNav" aria-expanded="false" onclick="toggleMobileMenu()"><span class="menu-icon" aria-hidden="true">☰</span><span id="mobileMenuLabel">Apartados</span></button>
+<nav id="primaryNav" aria-label="Navegación principal">
+<button onclick="showPage('inicio')"> Inicio</button><button onclick="showPage('reto')"> Reto del día</button><button onclick="showPage('calendario')"> 365 días</button><button onclick="showPage('crear')"> Crear</button><button onclick="showPage('bosque')">🌲 Limpiar bosque</button><button onclick="showPage('agenda')"> Agenda 2030</button>
+</nav></div></header>
+<main>
+<section id="inicio" class="page active"><div class="hero"><div>
+<span class="badge">Arte + educación ambiental</span><h1>Planeta en<br>365 Colores</h1>
+<p>Una experiencia artística para aprender sobre el cuidado del planeta mediante un color, un tema ambiental y un reto creativo cada día.</p>
+<div class="actions"><button class="primary" onclick="showPage('reto')">Comenzar reto</button><button class="secondary" onclick="showPage('agenda')">Conocer Agenda 2030</button></div>
+</div></div>
+<div class="grid"><div class="card"><h3> Crea</h3><p>Usa pincel, lápiz, crayón, marcador, acuarela, aerógrafo, formas y goma.</p></div><div class="card"><h3> Aprende</h3><p>Relaciona cada reto con acciones de cuidado ambiental y los ODS.</p></div><div class="card"><h3> Avanza</h3><p>Completa los retos y observa tu progreso durante los 365 días.</p></div></div></section>
+
+<section id="reto" class="page"><h2 class="section-title">Reto del día</h2><p class="muted">Hoy tienes una nueva oportunidad para observar, reflexionar y crear.</p>
+<div class="card challenge"><div id="colorBox" class="color-box"><span id="colorName"></span></div><div><span class="badge" id="dayLabel"></span><h2 id="challengeTitle"></h2><p id="challengeText"></p><p><strong>Reflexión:</strong> <span id="reflection"></span></p><p><strong>ODS:</strong> <span id="challengeODS"></span></p><div class="actions"><button class="primary" onclick="completeToday()">✓ Completar reto</button><button class="secondary" onclick="showPage('crear')"> Crear obra</button></div></div></div>
+<div class="fact-card" aria-live="polite"><div class="fact-kicker">Aprende algo nuevo</div><h3> Dato curioso del día</h3><p id="dailyFactText"></p><p class="muted" style="font-size:.9rem;margin-bottom:0">Fuente: <a id="dailyFactSource" href="https://www.nationalgeographicla.com/medio-ambiente/2024/06/dia-mundial-del-medio-ambiente-los-7-datos-curiosos-sobre-los-ecosistemas-que-debes-conocer" target="_blank" rel="noopener">National Geographic</a></p></div><p class="muted" style="font-size:.82rem">El catálogo contiene 365 curiosidades distintas con enlaces a fuentes de consulta. Los datos científicos pueden actualizarse conforme cambian las investigaciones.</p><div class="stats"><div class="stat"><b id="completedCount">0</b>retos completados</div><div class="stat"><b id="progressPct">0%</b>progreso</div></div></section>
+
+<section id="calendario" class="page"><h2 class="section-title">Calendario de 365 días</h2><p class="muted">Selecciona cualquier día para descubrir su color único, reto y dato ambiental. Cada día tiene un color distinto y una curiosidad diferente.</p><div class="calendar" id="calendar"></div></section>
+
+<section id="crear" class="page"><h2 class="section-title">Crear</h2><p class="muted">Realiza tu obra inspirada en el reto del día.</p>
+<div class="toolbar">
+<label>Herramienta <select id="tool"><option value="brush">Pincel</option><option value="pencil">Lápiz</option><option value="crayon">Crayón</option><option value="marker">Marcador</option><option value="watercolor">Acuarela</option><option value="airbrush">Aerógrafo</option><option value="eraser">Goma</option><option value="line">Línea</option><option value="rect">Rectángulo</option><option value="circle">Círculo</option><option value="triangle">Triángulo</option><option value="star">Estrella</option></select></label>
+<label>Color <input type="color" id="color" value="#2f6b4f"></label><label>Tamaño <input type="range" id="size" min="1" max="60" value="8"></label><label>Opacidad <input type="range" id="opacity" min="10" max="100" value="100"></label><label><input type="checkbox" id="fill"> Rellenar</label>
+<button class="secondary" onclick="undo()">↶ Deshacer</button><button class="secondary" onclick="redo()">↷ Rehacer</button><button class="secondary" onclick="clearCanvas()">Limpiar</button><button class="primary" onclick="savePNG()">Guardar PNG</button>
+</div><div class="canvas-wrap"><canvas id="canvas" width="1200" height="675"></canvas></div></section>
+
+
+<section id="bosque" class="page">
+  <h2 class="section-title"> Misión: Bosque limpio</h2>
+  <p class="muted">Recorre el bosque y recoge la basura para proteger a los animales y la naturaleza.</p>
+  <div class="card">
+    <div class="stats" style="margin-top:0">
+      <div class="stat"><b id="basuraCuenta">0 / 12</b>residuos recogidos</div>
+      <div class="stat" id="statTiempoBosque"><b id="tiempoBosque">00:40</b>TIEMPO RESTANTE</div>
+      <div class="stat"><b id="puntosBosque">0</b>puntos</div>
+    </div>
+    <div class="actions" style="align-items:center">
+      <label for="nivelBosque" style="font-weight:700">Nivel</label>
+      <select id="nivelBosque" onchange="cambiarNivelBosque(this.value)" style="padding:10px 14px;border-radius:10px;border:1px solid #c9d8ca;font:inherit">
+        <option value="1">Nivel 1 · Explorador</option>
+        <option value="2" disabled>Nivel 2 · Guardián</option>
+        <option value="3" disabled>Nivel 3 · Protector</option>
+        <option value="4" disabled>Nivel 4 · Experto</option>
+        <option value="5" disabled>Nivel 5 · Héroe del bosque</option>
+      </select>
+      <button class="primary" onclick="iniciarBosque()">▶ Iniciar nivel</button>
+      <button class="secondary" onclick="pausarBosque()">Ⅱ Pausar</button>
+    </div>
+    <p id="progresoNiveles" class="muted" style="text-align:center;margin:8px 0 16px">Completa cada nivel para desbloquear el siguiente. ¡Cada misión será más difícil!</p>
+    <canvas id="bosqueCanvas" width="1440" height="810" aria-label="Juego con estilo 3D para recoger basura en un bosque amplio"></canvas>
+    <p id="mensajeBosque" role="status" style="text-align:center;font-weight:700">Pulsa “Iniciar nivel” para comenzar la limpieza.</p>
+    <div class="actions" style="justify-content:center"><button id="reintentarBosque" class="primary" style="display:none" onclick="iniciarBosque()">↻ Reintentar este nivel</button></div>
+    <div class="actions" style="justify-content:center">
+      <button class="secondary" onpointerdown="controlBosque('up',true)" onpointerup="controlBosque('up',false)" onpointerleave="controlBosque('up',false)">⬆️</button>
+      <button class="secondary" onpointerdown="controlBosque('left',true)" onpointerup="controlBosque('left',false)" onpointerleave="controlBosque('left',false)">⬅️</button>
+      <button class="secondary" onpointerdown="controlBosque('down',true)" onpointerup="controlBosque('down',false)" onpointerleave="controlBosque('down',false)">⬇️</button>
+      <button class="secondary" onpointerdown="controlBosque('right',true)" onpointerup="controlBosque('right',false)" onpointerleave="controlBosque('right',false)">➡️</button>
+    </div>
+    <p class="muted" style="text-align:center">Controles: flechas o WASD para caminar por el bosque. En móvil, usa las flechas o toca el lugar al que quieres ir. La cámara acompaña al personaje por un bosque amplio. ¡Recoge los residuos del nivel antes de que el cronómetro llegue a 00:00.</p>
+  </div>
+</section>
+
+<section id="agenda" class="page"><h2 class="section-title">Agenda 2030</h2><p class="muted">La aplicación relaciona la creación artística con los Objetivos de Desarrollo Sostenible.</p>
+<div class="ods-grid">
+<div class="ods"><strong>ODS 4 — Educación de calidad</strong><p>Promueve oportunidades de aprendizaje mediante actividades artísticas y ambientales.</p></div>
+<div class="ods"><strong>ODS 6 — Agua limpia y saneamiento</strong><p>Invita a reflexionar sobre el cuidado y uso responsable del agua.</p></div>
+<div class="ods"><strong>ODS 7 — Energía asequible y no contaminante</strong><p>Relaciona la creatividad con formas responsables de utilizar la energía.</p></div>
+<div class="ods"><strong>ODS 12 — Producción y consumo responsables</strong><p>Fomenta hábitos conscientes sobre los recursos y los objetos que utilizamos.</p></div>
+<div class="ods"><strong>ODS 13 — Acción por el clima</strong><p>Acerca al usuario a la reflexión y expresión artística sobre el cambio climático.</p></div>
+<div class="ods"><strong>ODS 14 — Vida submarina</strong><p>Promueve la conciencia sobre la protección de mares, océanos y ecosistemas acuáticos.</p></div>
+<div class="ods"><strong>ODS 15 — Vida de ecosistemas terrestres</strong><p>Destaca la importancia de proteger bosques, suelos, plantas, animales y biodiversidad.</p></div>
+</div>
+<div class="card" style="margin-top:24px"><h2>Referencias</h2>
+<div class="ref"><strong>Naciones Unidas. (s. f.). <em>Objetivos de Desarrollo Sostenible.</em></strong><br><a href="https://www.un.org/sustainabledevelopment/es/objetivos-de-desarrollo-sostenible/" target="_blank" rel="noopener">https://www.un.org/sustainabledevelopment/es/objetivos-de-desarrollo-sostenible/</a></div>
+<div class="ref"><strong>Naciones Unidas. (2015). <em>Transformar nuestro mundo: La Agenda 2030 para el Desarrollo Sostenible.</em></strong><br><a href="https://sdgs.un.org/2030agenda" target="_blank" rel="noopener">https://sdgs.un.org/2030agenda</a></div>
+<div class="ref"><strong>National Geographic Latinoamérica. (2024). <em>Datos curiosos sobre los ecosistemas.</em></strong><br><a href="https://www.nationalgeographicla.com/medio-ambiente/2024/06/dia-mundial-del-medio-ambiente-los-7-datos-curiosos-sobre-los-ecosistemas-que-debes-conocer" target="_blank" rel="noopener">https://www.nationalgeographicla.com/medio-ambiente/2024/06/dia-mundial-del-medio-ambiente-los-7-datos-curiosos-sobre-los-ecosistemas-que-debes-conocer</a></div>
+<div class="ref"><strong>Comisión Nacional para el Conocimiento y Uso de la Biodiversidad (CONABIO). (s. f.). <em>Ecosistemas.</em></strong><br><a href="https://www.biodiversidad.gob.mx/ecosistemas/" target="_blank" rel="noopener">https://www.biodiversidad.gob.mx/ecosistemas/</a></div>
+<div class="ref"><strong>CONABIO. (s. f.). <em>Ecosistemas de México.</em></strong><br><a href="https://www.biodiversidad.gob.mx/ecosistemas/ecosismex.html" target="_blank" rel="noopener">https://www.biodiversidad.gob.mx/ecosistemas/ecosismex.html</a></div>
+<div class="ref"><strong>Organización Mundial de la Salud (OMS). (s. f.). <em>Biodiversidad.</em></strong><br><a href="https://www.who.int/es/news-room/fact-sheets/detail/biodiversity" target="_blank" rel="noopener">https://www.who.int/es/news-room/fact-sheets/detail/biodiversity</a></div>
+<div class="ref"><strong>Organización de las Naciones Unidas para la Alimentación y la Agricultura (FAO). (s. f.). <em>Sitio oficial de la FAO.</em></strong><br><a href="https://www.fao.org/home/es" target="_blank" rel="noopener">https://www.fao.org/home/es</a></div>
+<div class="ref"><strong>Naciones Unidas. (s. f.). <em>Causas y efectos del cambio climático.</em></strong><br><a href="https://www.un.org/es/climatechange/science/causes-effects-climate-change" target="_blank" rel="noopener">https://www.un.org/es/climatechange/science/causes-effects-climate-change</a></div>
+<div class="ref"><strong>Naciones Unidas. (s. f.). <em>El clima y la tierra.</em></strong><br><a href="https://www.un.org/es/climatechange/science/climate-issues/land" target="_blank" rel="noopener">https://www.un.org/es/climatechange/science/climate-issues/land</a></div>
+<div class="ref"><strong>Naciones Unidas. (s. f.). <em>Océanos y cambio climático.</em></strong><br><a href="https://www.un.org/es/climatechange/science/climate-issues/ocean" target="_blank" rel="noopener">https://www.un.org/es/climatechange/science/climate-issues/ocean</a></div>
+<div class="ref"><strong>Naciones Unidas. (s. f.). <em>Agua y cambio climático.</em></strong><br><a href="https://www.un.org/es/climatechange/science/climate-issues/water" target="_blank" rel="noopener">https://www.un.org/es/climatechange/science/climate-issues/water</a></div>
+<div class="ref"><strong>Naciones Unidas. (s. f.). <em>Plásticos y cambio climático.</em></strong><br><a href="https://www.un.org/es/climatechange/science/climate-issues/plastics" target="_blank" rel="noopener">https://www.un.org/es/climatechange/science/climate-issues/plastics</a></div>
+<div class="ref"><strong>Naciones Unidas. (s. f.). <em>Energías renovables.</em></strong><br><a href="https://www.un.org/es/climatechange/science/climate-issues/renewable-energy" target="_blank" rel="noopener">https://www.un.org/es/climatechange/science/climate-issues/renewable-energy</a></div>
+<div class="ref"><strong>Concepts. (s. f.). <em>Concepts: Infinite, flexible sketching.</em></strong><br><a href="https://concepts.app/en/" target="_blank" rel="noopener">https://concepts.app/en/</a></div>
+</div></section>
+</main>
+<div class="preview-switch"><button id="pcBtn" class="active" onclick="setPreview('pc')">🖥 PC</button><button id="mobileBtn" onclick="setPreview('mobile')">📱 Móvil</button></div>
+<footer>Planeta en 365 Colores · Aplicación educativa de arte y conciencia ambiental</footer>
+<script src="script.js" defer></script>
+</body></html>
